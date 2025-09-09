@@ -1,20 +1,22 @@
 "use client"
-import {useRouter} from "next/navigation";
+import {useRouter, useParams} from "next/navigation";
 import { useEffect, useState } from "react";
 
-export default function EditPage({params}:{params:{id:string}}) {
+export default function EditPage() {
 
     const [formData, setFormData] = useState({ term: "", interpretation: "" });
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
 const router = useRouter();
+const params = useParams();
+const id = params.id as string;
 
     useEffect(() => {
-
+ 
         const fetchData=async()=>{
             try {
-                const response=await fetch(`/api/interpretations/${params.id}`)
+                const response=await fetch(`/api/interpretations/${id}`)
                 if(!response.ok){
                     throw new Error("Failed to fetch interpretation")
                 }
@@ -26,9 +28,9 @@ const router = useRouter();
             }
         };
 
-        fetchData();
+        if (id) fetchData();
 
-    }, [])
+    }, [id])
 
     const handleInputChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -49,7 +51,7 @@ const handleSubmit=async(e:React.FormEvent)=>{
         setIsLoading(true);
 
         try {
-            const response = await fetch(`/api/interpretations/${params.id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(formData) });
+            const response = await fetch(`/api/interpretations/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(formData) });
 
             if (!response.ok){
                 throw new Error("Failed to update interpretation");
