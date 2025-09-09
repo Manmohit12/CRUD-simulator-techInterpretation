@@ -15,7 +15,7 @@ export default function CreatePage() {
             ...prevData,
             [e.target.name]: e.target.value
         }));
-        console.log(formData);
+        
     }
 
     const handleSubmit = async (e: React.FormEvent) => {
